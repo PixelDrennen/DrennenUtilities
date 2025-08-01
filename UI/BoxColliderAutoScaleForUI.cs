@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace IPVR.UI
+namespace DrennenUtilities.UI
 {
 	[RequireComponent(typeof(BoxCollider))]
 	[RequireComponent(typeof(RectTransform))]
