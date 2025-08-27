@@ -1,15 +1,15 @@
-using System;
 /*
     This script was created by Drennen Dooms, 2022.
 */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Dooms.Math;
+using Drennen.Math;
 using UnityEngine;
 
 
-namespace Dooms.Animation
+namespace Drennen.Animation
 {
 	[System.Serializable]
 	public class AnimationCollection
@@ -102,16 +102,19 @@ namespace Dooms.Animation
 
 
 		public float time = 0;
+		public AnimationData animationData;
+		
+		public bool pingpong;
+		public bool loop;
+
 		private float speed = 2f;
 		private float direction = 0;
 		private bool completed;
-		public bool pingpong;
 
 		[HideInInspector]
 		public AnimationSetManager animationSetManager;
 
 		public List<AnimatedObject> animatedObjects = new List<AnimatedObject>();
-		public AnimationData animationData;
 
 
 		private void Awake()
@@ -127,6 +130,7 @@ namespace Dooms.Animation
 					if (animationData.animationSets[i].name == animatedObjects[i].name) animatedObjects[i].animationSet = animationData.animationSets[i];
 					else { Debug.LogError($"Animated object name {animatedObjects[i].name} does not match animation set {animationData.animationSets[i].name}"); }
 				}
+				InitializeAnimationSets();
 			}
 
 			OnAwake();
@@ -142,6 +146,7 @@ namespace Dooms.Animation
 		private void Start()
 		{
 			OnStart();
+			PostAwake();
 		}
 
 		public virtual void OnUpdate()
@@ -192,7 +197,24 @@ namespace Dooms.Animation
 		public virtual void PostAwake()
 		{
 			if (pingpong)
-				StartCoroutine(PingPong());
+				pingpongRoutine = StartCoroutine(PingPong());
+
+			if (loop)
+			{
+				loopRoutine = StartCoroutine(Loop());
+			}
+		}
+		private Coroutine loopRoutine;
+		private IEnumerator Loop()
+		{
+			yield return new WaitUntil(() => Completed);
+			if (loop == false) StopCoroutine(loopRoutine);
+			else
+			{
+				time = 0f;
+				SetDirection(1);
+				loopRoutine = StartCoroutine(Loop());
+			}
 		}
 
 		public void SetSpeed(double speed) { SetSpeed((float)speed); }
@@ -259,6 +281,12 @@ namespace Dooms.Animation
 
 			if (direction != 0)
 				if ((time == 1 && direction == 1 || time == 0 && direction == -1)) OnCompleteCallback();
+
+			if (animatedObjects != null && animationData != null &&
+				animationData.animationSets != null)
+			{
+				ProcessAnimationSets();
+			}
 		}
 
 		public virtual void OnAnimate()
@@ -287,13 +315,17 @@ namespace Dooms.Animation
 
 
 
-
+		private Coroutine pingpongRoutine;
 		public IEnumerator PingPong()
 		{
 			yield return new WaitUntil(() => Completed);
-			yield return new WaitForSeconds(1);
-			SetDirection(-GetDirection());
-			StartCoroutine(PingPong());
+			if (pingpong == false) StopCoroutine(pingpongRoutine);
+			else
+			{
+				// yield return new WaitForSeconds(1);
+				SetDirection(-GetDirection());
+				pingpongRoutine = StartCoroutine(PingPong());
+			}
 		}
 
 		public static float ProcessInterpolation(Interpolation interpolation, Direction direction, float alpha)
@@ -421,39 +453,3 @@ namespace Dooms.Animation
     This script was created by Drennen Dooms, 2022.
 */
 
-
-namespace Dooms.Animation
-{
-
-	[CreateAssetMenu(fileName = "Data", menuName = "Animations/AnimatedObjectList", order = 1)]
-	public class AnimationData : ScriptableObject
-	{
-
-		public void SetAllToDefault()
-		{
-			for (int i = 0; i < animationSets.Count; i++)
-			{
-				for (int j = 0; j < animationSets[i].scales.Count; j++)
-				{
-					animationSets[i].scales[j].interpolation = globalInterpolationDefault;
-					animationSets[i].scales[j].transitionDirection = globalDirectionDefault;
-				}
-				for (int j = 0; j < animationSets[i].moves.Count; j++)
-				{
-					animationSets[i].moves[j].interpolation = globalInterpolationDefault;
-					animationSets[i].moves[j].transitionDirection = globalDirectionDefault;
-				}
-				for (int j = 0; j < animationSets[i].rotations.Count; j++)
-				{
-					animationSets[i].rotations[j].interpolation = globalInterpolationDefault;
-					animationSets[i].rotations[j].transitionDirection = globalDirectionDefault;
-				}
-			}
-		}
-
-		public List<AnimationSet> animationSets = new List<AnimationSet>();
-
-		public Math.Interpolation globalInterpolationDefault;
-		public Math.Direction globalDirectionDefault;
-	}
-}
