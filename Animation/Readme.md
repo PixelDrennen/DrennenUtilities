@@ -87,10 +87,10 @@ The two main callbacks are:
 
   - Can only be created via *`Right-click > Create > Animations`* in the Unity Project window.
   - Must assign the ScriptableObject (SO) in the Inspector.
-  - *`Animated Objects List`* on the **`TimeAnimation`** component must:
-    - Not be null
-	- Match the object count defined in the ScriptableObject inspector window.
-	- Contain objects matching names defined in the TA component (improvements WIP).
+  - *`Animated Objects List`* on the **`TimeAnimation`** Requirements:
+    - Cannot be null
+	- Must match the object count defined in the ScriptableObject inspector window.
+	- Must contain objects matching names defined in the TA component (improvements WIP).
 	
 ### Notes
  > - Keep consistent in-out time values. 
