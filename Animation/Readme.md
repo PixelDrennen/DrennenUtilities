@@ -19,18 +19,18 @@ The two main callbacks are:
 ---
 
 ### TimeAnimation Options
- - **time** :: *public float*
- - **speed** :: *float* > SetSpeed
- - **direction** :: *float* > SetDirection
- - **completed** :: *bool* > OnComplete
- - **pingpong** :: *public bool*
- - **loop** :: *public bool*
- - **OnAnimateCallback** :: *Callback delegate*
- - **OnCompleteCallback** :: *Callback delegate*
- - **AnimationData** :: *Callback delegate*
- - **animationData** :: *public AnimationData*
- - **animationSetManager** :: *public AnimationSetManager*
- - **animatedObjects** :: *public List<AnimatedObject>*
+ - **`time`** :: *public float*
+ - **`speed`** :: *float* > SetSpeed/GetSpeed
+ - **`direction`** :: *float* > SetDirection/GetDirection
+ - **`completed`** :: *bool* > OnComplete
+ - **`pingpong`** :: *public bool*
+ - **`loop`** :: *public bool*
+ - **`OnAnimateCallback`** :: *Callback delegate*
+ - **`OnCompleteCallback`** :: *Callback delegate*
+ - **`AnimationData`** :: *Callback delegate*
+ - **`animationData`** :: *public AnimationData*
+ - **`animationSetManager`** :: *public AnimationSetManager*
+ - **`animatedObjects`** :: *public `List<AnimatedObject>`*
 
 ---
 
@@ -49,10 +49,10 @@ The two main callbacks are:
   - `0` → still / paused  
 
 - **`SetTime(float time)`**  
-  Sets the current time value of the animation (0 → 1).
+  Sets the current time value of the animation (`0 → 1`).
 
 - **`Slice(time, float start (0–1), float end (0–1))`**  
-  Returns a float value representing the portion of the animation within the given range as a normalized (0–1) time value.  
+  Returns a float value representing the portion of the animation within the given range as a normalized (`0–1`) time value.  
 
   **Slice Example:**  
   ```csharp
@@ -63,35 +63,37 @@ The two main callbacks are:
 
 ### Easing
  **Namespace:** `Dooms.Math.Easing`
- Various options for processing 0-1 values using easing functions.
+ Various options for processing `0-1` values using easing functions.
  
  **Available Easing Interpolation Mutators:**
-  - sine, circ, bounce, expo, back, elastic, cubic, quad, quint, quart
+  - `sine, circ, bounce, expo, back, elastic, cubic, quad, quint, quart`
   
  **Available Direction Mutators:**
-  - In, Out, Both
+  - `In, Out, Both`
 
  **Available Functions:**
-  - Easing.Ease(float time, Interpolation interpolation, Direction direction)
-  - prefix + suffix
-  - *Prefixes:*
-   - EaseIn, EaseOut, EaseInOut
-  - *Suffixes:*
-   - Sine, Circ, Bounce, Expo, Back, Elastic, Cubic, Quad, Quint, Quart
+  - `Easing.Ease(float time, Interpolation interpolation, Direction direction)`
+  - Use a prefix + appropriate suffix to call various easing functions.
+    - *Prefixes:*
+      - `EaseIn, EaseOut, EaseInOut`
+    - *Suffixes:*
+      - `Sine, Circ, Bounce, Expo, Back, Elastic, Cubic, Quad, Quint, Quart`
+    - Example: `EaseInOut(time, Interpolation.Circ, Direction.Both)`
+
 ---
 
 ### Animation Data Scriptable Object
 **Namespace:** `Drennen.Animation`
 
-  - Can only be created via *Right-click > Create > Animations* in the Unity Project window.
+  - Can only be created via *`Right-click > Create > Animations`* in the Unity Project window.
   - Must assign the ScriptableObject (SO) in the Inspector.
-  - *Animated Objects List* on the **TimeAnimation** component must:
+  - *`Animated Objects List`* on the **`TimeAnimation`** component must:
     - Not be null
 	- Match the object count defined in the ScriptableObject inspector window.
 	- Contain objects matching names defined in the TA component (improvements WIP).
 	
 ### Notes
- - Keep consistent in-out time values. 
-	  - Example: *anim set 1 has `out` value of 0.3* -- *anim set 2 `in` value should then be >= 0.3*
+ > - Keep consistent in-out time values. 
+ >   - Example: *anim set 1 has `out` value of 0.3* -- *anim set 2 `in` value should then be >= 0.3*
 
-> **Crossfading** is not yet implemented.
+ > **Crossfading** is not yet implemented.
