@@ -5,11 +5,11 @@
 using UnityEngine;
 
 
-namespace Dooms.Math
+namespace Drennen.Math
 {
 	public enum Interpolation
 	{
-		sine, circ, bounce, expo, back, elastic, cubic, quad, quint, quart
+		sine, circ, bounce, expo, back, elastic, cubic, quad, quint, quart, linear
 	}
 	public enum Direction
 	{
@@ -31,6 +31,10 @@ namespace Dooms.Math
 					case Direction.Both:
 						return EaseInOutBounce(x);
 				}
+			}
+			if (interpolation == Interpolation.linear)
+			{
+				return EaseInOutLin(x);
 			}
 			if (interpolation == Interpolation.circ)
 			{
@@ -181,6 +185,13 @@ namespace Dooms.Math
 			(1f - EaseOutBounce(1f - 2f * x)) / 2f :
 			(1f + EaseOutBounce(2f * x - 1f)) / 2f;
 		}
+		#endregion
+		#region Linear
+		public static float EaseInOutLin(float x)
+		{
+			return x;
+		}
+
 		#endregion
 
 		#region Circ
